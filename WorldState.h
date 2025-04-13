@@ -30,6 +30,7 @@ namespace GOAP
         }
 
         const std::unordered_map<std::string, bool>& GetStates() const { return m_States; }
+        bool MatchesGoal(const WorldState& goalState) const;
 
     private:
         std::unordered_map<std::string, bool> m_States;

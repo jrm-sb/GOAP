@@ -35,9 +35,6 @@ namespace GOAP
 			const WorldState& goalState,
 			const std::vector<std::shared_ptr<Action>>& actions
 		);
-
-	private:
-		static bool MatchesGoal(const WorldState& currentState, const WorldState& goalState);
 	};
 }
 

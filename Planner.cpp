@@ -18,7 +18,7 @@ namespace GOAP
             Node currentNode = nodesToVisit.front();
             nodesToVisit.pop();
 
-            if (MatchesGoal(currentNode.state, goalState))
+            if (currentNode.state.MatchesGoal(goalState))
                 return currentNode.plan;
 
             for (const std::shared_ptr<Action>& action : actions)
@@ -40,17 +40,5 @@ namespace GOAP
         }
 
         return {};
-    }
-
-    bool Planner::MatchesGoal(const WorldState& currentState, const WorldState& goalState)
-    {
-        for (const auto& [key, value] : goalState.GetStates())
-        {
-            auto& states = currentState.GetStates();
-            auto it = states.find(key);
-            if (it == states.end() || it->second != value)
-                return false;
-        }
-        return true;
     }
 }

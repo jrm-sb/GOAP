@@ -90,7 +90,7 @@ TEST(BuildOrBuyHouse)
 {
     std::unordered_map<std::string, bool> startState =
     {
-        { "HasAxe", true },
+        { "HasWood", true },
         { "HasMoney", true },
     };
 
@@ -102,14 +102,13 @@ TEST(BuildOrBuyHouse)
     std::vector<std::shared_ptr<GOAP::Action>> actions =
     {
         std::make_shared<GOAP::BuildHouseAction>(),
-        std::make_shared<GOAP::ChopWoodAction>(),
-        std::make_shared<GOAP::CollectWoodAction>(),
         std::make_shared<GOAP::BuyHouseAction>()
     };
 
     const std::vector<std::shared_ptr<GOAP::Action>> plan = GOAP::Planner::Plan(startState, goalState, actions);
 
     EXPECT(plan.size() == 1);
+    EXPECT(plan[0]->GetName() == "BuildHouse");
 }
 
 int main()
