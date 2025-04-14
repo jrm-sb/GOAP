@@ -7,7 +7,12 @@ namespace GOAP
 {
     std::vector<std::shared_ptr<Action>> Planner::Plan(const WorldState& startState, const WorldState& goalState, const std::vector<std::shared_ptr<Action>>& actions)
     {
-        std::queue<Node> nodesToVisit; // Used to store all possible actions that could lead to the goal
+        // Used to store all possible plans that could lead to the goal
+        // Breadth-First Search evaluates nodes in order of discovery
+        // TODO: replace queue by priority_queue when implementing A*
+        std::queue<Node> nodesToVisit;
+
+        // Used to keep an history of the visited states to avoid cycles
         std::unordered_set<std::string> visitedStates;
 
         nodesToVisit.push({ startState.GetStates(), {}, 0.0f});
