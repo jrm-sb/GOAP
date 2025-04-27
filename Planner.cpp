@@ -7,24 +7,23 @@ namespace GOAP
 {
     std::vector<std::shared_ptr<Action>> Planner::Plan(const WorldState& startState, const WorldState& goalState, const std::vector<std::shared_ptr<Action>>& actions)
     {
-        // Used to store all possible plans that could lead to the goal
-        // Breadth-First Search evaluates nodes in order of discovery
-        // TODO: replace queue by priority_queue when implementing A*
-        std::queue<Node> nodesToVisit;
+        std::priority_queue<Node, std::vector<Node>, CompareNodes> openSet;
 
         // Used to keep an history of the visited states to avoid cycles
         std::unordered_set<std::string> visitedStates;
 
-        nodesToVisit.push({ startState.GetStates(), {}, 0.0f});
-        visitedStates.insert(Utils::HashString(startState.GetStates()));
+        openSet.push({ startState.GetStates(), {}, 0.0f, Heuristic(startState, goalState)});
 
-        while (!nodesToVisit.empty())
+        while (!openSet.empty())
         {
-            Node currentNode = nodesToVisit.front();
-            nodesToVisit.pop();
+            Node currentNode = openSet.top();
+            openSet.pop();
 
             if (currentNode.state.MatchesGoal(goalState))
                 return currentNode.plan;
+
+            const std::string& currentHash = Utils::HashString(currentNode.state);
+            visitedStates.insert(currentHash);
 
             for (const std::shared_ptr<Action>& action : actions)
             {
@@ -35,11 +34,13 @@ namespace GOAP
                     if (visitedStates.find(hashStr) != visitedStates.end())
                         continue;
 
-                    visitedStates.insert(hashStr);
+                    float newG = currentNode.gCost + action->GetCost();
+                    float newH = Heuristic(tempState, goalState);
 
                     std::vector<std::shared_ptr<Action>> newPlan = currentNode.plan;
                     newPlan.push_back(action);
-                    nodesToVisit.push({ tempState, newPlan, currentNode.cost + action->GetCost() });
+
+                    openSet.push({ tempState, newPlan, newG, newH });
                 }
             }
         }

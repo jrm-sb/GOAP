@@ -6,7 +6,7 @@ namespace GOAP
     class BuyHouseAction : public Action
     {
     public:
-        BuyHouseAction(const std::string& name = "BuyHouse", float cost = 5.0f) : Action(name, cost) {}
+        BuyHouseAction(const std::string& name = "BuyHouse", float cost = 1.0f) : Action(name, cost) {}
 
         bool ArePreconditionsSatisfied(const WorldState& state) const override;
         void ApplyEffects(WorldState& state) const override;
